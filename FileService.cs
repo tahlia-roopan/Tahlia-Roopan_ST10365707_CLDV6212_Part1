@@ -18,21 +18,17 @@ namespace ABCRetail_CLDV6212_Part1.Services
             _shareServiceClient = new ShareServiceClient(connectionString);
         }
 
-        public async Task UploadFileAsync(string shareName, string fileName, Stream content, string directoryName)
+        public async Task UploadFileAsync(string shareName, string fileName, Stream content)
         {
             var shareClient = _shareServiceClient.GetShareClient(shareName);
             await shareClient.CreateIfNotExistsAsync();
-            var directoryClient = shareClient.GetDirectoryClient(directoryName);
-            await directoryClient.CreateIfNotExistsAsync();
+            var directoryClient = shareClient.GetRootDirectoryClient();
             var fileClient = directoryClient.GetFileClient(fileName);
             await fileClient.CreateAsync(content.Length);
             await fileClient.UploadAsync(content);
         }
 
-        internal Task UploadFileAsync(string v, string fileName, Stream stream)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }
 

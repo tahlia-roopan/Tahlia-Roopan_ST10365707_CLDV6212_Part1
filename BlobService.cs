@@ -19,29 +19,17 @@ namespace ABCRetail_CLDV6212_Part1.Services
             _blobServiceClient = new BlobServiceClient(connectionString);
         }
 
-        public async Task UploadBlobAsync(string containerName, string blobName, Stream content, string contentType)
+        public async Task UploadBlobAsync(string containerName, string blobName, Stream content)
         {
             var containerClient = _blobServiceClient.GetBlobContainerClient(containerName);
             await containerClient.CreateIfNotExistsAsync();
             var blobClient = containerClient.GetBlobClient(blobName);
+            await blobClient.UploadAsync(content, true);
+           
 
-            var blobHttpHeaders = new BlobHttpHeaders
-            {
-                ContentType = contentType
-            };
-
-            // Corrected overload usage
-            await blobClient.UploadAsync(content, new BlobUploadOptions
-            {
-                HttpHeaders = blobHttpHeaders,
-             
-            });
         }
 
-        internal Task UploadBlobAsync(string v, string fileName, Stream stream)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 
 }
